@@ -31,12 +31,8 @@
 You can install LealLogger via terminal:
 
 ```bash
-// TODO (I'll publish in Nuget package)
+dotnet add package LealLogger
 ```
-
-
-
-> Nuget Package. TODO...
 
 ### Usage
 
