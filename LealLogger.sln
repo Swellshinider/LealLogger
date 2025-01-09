@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LealLogger", "LealLogger\LealLogger.csproj", "{F23F4059-065B-4363-AEA1-F8898CA719EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LealLogger.Tests", "LealLogger.Tests\LealLogger.Tests.csproj", "{16EDEE1E-BA5A-44F5-8A1C-C12E9D88BA49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F23F4059-065B-4363-AEA1-F8898CA719EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F23F4059-065B-4363-AEA1-F8898CA719EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F23F4059-065B-4363-AEA1-F8898CA719EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F23F4059-065B-4363-AEA1-F8898CA719EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16EDEE1E-BA5A-44F5-8A1C-C12E9D88BA49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16EDEE1E-BA5A-44F5-8A1C-C12E9D88BA49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16EDEE1E-BA5A-44F5-8A1C-C12E9D88BA49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16EDEE1E-BA5A-44F5-8A1C-C12E9D88BA49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

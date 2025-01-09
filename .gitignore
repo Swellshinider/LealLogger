@@ -1,0 +1,6 @@
+# Build folders
+*\obj
+*\bin
+
+# Editor personal configs
+.editorconfig
