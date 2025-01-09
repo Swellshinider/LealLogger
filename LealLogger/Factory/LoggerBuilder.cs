@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using LealLogger.Handlers;
 
 namespace LealLogger.Factory;
@@ -32,6 +33,21 @@ public sealed class LoggerBuilder
 		_logLevel = LogLevel.INFO;
 #endif
 	}
+	
+	/// <summary>
+	/// Getter for the current _logLevel value
+	/// </summary>
+	public LogLevel MinimumLogLevel { get => _logLevel; }
+	
+	/// <summary>
+	/// Getter for the _queueCapacity value
+	/// </summary>
+	public int QueueCapacity { get => _queueCapacity; }
+	
+	/// <summary>
+	/// Getter for the _handlers value
+	/// </summary>
+	public List<LogHandler> Handlers { get => _handlers; }
 
 	/// <summary>
 	/// Adds a <see cref="ConsoleLogHandler"/> to the collection of log handlers.
@@ -105,17 +121,17 @@ public sealed class LoggerBuilder
 	/// A <see cref="Logger"/> (derived from <see cref="BaseLogger"/>), 
 	/// configured with this builder's settings.
 	/// </returns>
-	public BaseLogger Build() => new Logger(_logLevel, _queueCapacity, [.. _handlers]);
+	public Logger Build() => new(_logLevel, _queueCapacity, [.. _handlers]);
 
 	/// <summary>
 	/// Builds and returns a user-defined class <typeparamref name="T"/> (derived from <see cref="BaseLogger"/>),
 	/// by looking for a constructor with the signature 
-	/// (<see cref="LogLevel"/>, <see cref="int"/>, <see cref="List{LogHandler}"/>).
+	/// (<see cref="LogLevel"/>, <see cref="int"/>, <see cref="ImmutableArray{LogHandler}"/>).
 	/// </summary>
 	/// <typeparam name="T">A class that inherits from <see cref="BaseLogger"/>.</typeparam>
 	/// <exception cref="MissingMethodException">
 	/// Thrown if the <typeparamref name="T"/> type does not define a public constructor matching 
-	/// <c>(LogLevel, int, List&lt;LogHandler&gt;)</c>.
+	/// <c>(LogLevel, int, ImmutableArray&lt;LogHandler&gt;)</c>.
 	/// </exception>
 	/// <returns>
 	/// An instance of <typeparamref name="T"/>, constructed with this builder's current log level, 
@@ -124,10 +140,10 @@ public sealed class LoggerBuilder
 	public T Build<T>() where T : BaseLogger
 	{
 		// Extract expected constructor
-		var ctor = typeof(T).GetConstructor([typeof(LogLevel), typeof(int), typeof(List<LogHandler>)])
-			?? throw new MissingMethodException($"Constructor with signature (LogLevel, int, List<LogHandler>) not found in type {typeof(T).FullName}.");
+		var ctor = typeof(T).GetConstructor([typeof(LogLevel), typeof(int), typeof(ImmutableArray<LogHandler>)])
+			?? throw new MissingMethodException($"Constructor with signature (LogLevel, int, ImmutableArray<LogHandler>) not found in type {typeof(T).FullName}.");
 
 		// Return the invoked constructor casting by T
-		return (T)ctor.Invoke([_logLevel, _queueCapacity, _handlers]);
+		return (T)ctor.Invoke([_logLevel, _queueCapacity, _handlers.ToImmutableArray()]);
 	}
 }
