@@ -36,6 +36,8 @@ dotnet add package LealLogger
 
 ### Usage
 
+For a practical example check out [Sample project](./LealLogger.Sample/Program.cs)
+
 #### 1. Basic Setup
 
 ```csharp
