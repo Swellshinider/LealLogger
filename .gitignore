@@ -3,4 +3,9 @@
 *\bin
 
 # Editor personal configs
+/.vscode
 .editorconfig
+
+# Sample project result files
+*.log
+*.sqlite3

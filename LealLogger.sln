@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LealLogger", "LealLogger\Le
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LealLogger.Tests", "LealLogger.Tests\LealLogger.Tests.csproj", "{16EDEE1E-BA5A-44F5-8A1C-C12E9D88BA49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LealLogger.Sample", "LealLogger.Sample\LealLogger.Sample.csproj", "{3B72AEC8-B4EA-45F4-BE63-A6B566EED725}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{16EDEE1E-BA5A-44F5-8A1C-C12E9D88BA49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16EDEE1E-BA5A-44F5-8A1C-C12E9D88BA49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16EDEE1E-BA5A-44F5-8A1C-C12E9D88BA49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B72AEC8-B4EA-45F4-BE63-A6B566EED725}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B72AEC8-B4EA-45F4-BE63-A6B566EED725}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B72AEC8-B4EA-45F4-BE63-A6B566EED725}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B72AEC8-B4EA-45F4-BE63-A6B566EED725}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
