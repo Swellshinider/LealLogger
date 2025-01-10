@@ -2,10 +2,13 @@ namespace LealLogger.Handlers;
 
 public class ConsoleLogHandler : LogHandler
 {
-	internal ConsoleLogHandler() { }
+	internal ConsoleLogHandler(LogLevel logLevel) : base(logLevel) { }
 
 	public override void HandleLog(Log logEntry)
 	{
+		if (logEntry.LogLevel < MinimumLogLevel)
+			return;
+		
 		var originalColor = Console.ForegroundColor;
 		Console.ForegroundColor = GetColorForLevel(logEntry.LogLevel);
 		Console.Write($"[({logEntry.Timestamp:dd-MM-yyyy HH:mm:ss.ffff}) {logEntry.LogLevel}]: ");
