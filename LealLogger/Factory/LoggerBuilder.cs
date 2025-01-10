@@ -109,7 +109,7 @@ public sealed class LoggerBuilder
 	public LoggerBuilder SetQueueCapacity(int queueCapacity)
 	{
 		if (queueCapacity < 1)
-			throw new ArgumentException("'queueCapacity' must be greater than 0");
+			throw new ArgumentException("Queue capacity must be greater than 0.", nameof(queueCapacity));
 
 		_queueCapacity = queueCapacity;
 		return this;
