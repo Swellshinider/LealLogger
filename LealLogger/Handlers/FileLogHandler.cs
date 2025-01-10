@@ -6,7 +6,7 @@ public sealed class FileLogHandler : LogHandler
 	private readonly Lock _lock = new();
 	private StreamWriter? _writer;
 
-	public FileLogHandler(string filePath)
+	internal FileLogHandler(string filePath, LogLevel logLevel) : base(logLevel)
 	{
 		_filePath = filePath;
 		_writer = new StreamWriter(File.Open(_filePath, FileMode.Append, FileAccess.Write, FileShare.Read))
@@ -17,21 +17,20 @@ public sealed class FileLogHandler : LogHandler
 
 	public override void HandleLog(Log logEntry)
 	{
-		if (_writer == null) 
+		if (_writer == null || logEntry.LogLevel < MinimumLogLevel)
 			return;
 
 		lock (_lock)
 		{
-			// Minimal string manipulation to reduce overhead
-			_writer.Write($"[{logEntry.Timestamp:yyyy-MM-dd HH:mm:ss.fff}]");
-			_writer.Write($" [{logEntry.LogLevel}]");
-			_writer.Write($" [{logEntry.ThreadId}] ");
-			_writer.WriteLine(logEntry.Message);
+			_writer.WriteLine($"[({logEntry.Timestamp:dd-MM-yyyy HH:mm:ss.ffff}) {logEntry.LogLevel}]: {logEntry.Message}");
+			_writer.WriteLine($"├─── ApplicationName: {logEntry.ApplicationName}");
+			_writer.WriteLine($"├─── UserName       : {logEntry.UserName}");
+			_writer.WriteLine($"├─── MachineName    : {logEntry.MachineName}");
+			_writer.WriteLine($"├─── ProcessId      : {logEntry.ProcessId}");
+			_writer.WriteLine($"└─── ThreadId       : {logEntry.ThreadId}");
 
 			if (logEntry.Exception != null)
-			{
-				_writer.WriteLine(logEntry.Exception.ToString());
-			}
+				_writer.WriteLine(FormatException(logEntry.Exception));
 		}
 	}
 

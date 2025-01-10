@@ -52,21 +52,23 @@ public sealed class LoggerBuilder
 	/// <summary>
 	/// Adds a <see cref="ConsoleLogHandler"/> to the collection of log handlers.
 	/// </summary>
+	/// <param name="logLevel">The minimum log level for this log handler. Defaults to DEBUG</param>
 	/// <returns>
 	/// This <see cref="LoggerBuilder"/> instance for method chaining.
 	/// </returns>
-	public LoggerBuilder AddConsoleHandler()
-		=> AddHandler(new ConsoleLogHandler());
+	public LoggerBuilder AddConsoleHandler(LogLevel logLevel = LogLevel.DEBUG)
+		=> AddHandler(new ConsoleLogHandler(logLevel));
 
 	/// <summary>
 	/// Adds a <see cref="FileLogHandler"/> to the collection of log handlers.
 	/// </summary>
 	/// <param name="filePath">The path to the file where logs will be written.</param>
+	/// <param name="logLevel">The minimum log level for this log handler. Defaults to DEBUG</param>
 	/// <returns>
 	/// This <see cref="LoggerBuilder"/> instance for method chaining.
 	/// </returns>
-	public LoggerBuilder AddFileHandler(string filePath)
-		=> AddHandler(new FileLogHandler(filePath));
+	public LoggerBuilder AddFileHandler(string filePath, LogLevel logLevel = LogLevel.DEBUG)
+		=> AddHandler(new FileLogHandler(filePath, logLevel));
 
 	/// <summary>
 	/// Adds a custom <see cref="LogHandler"/> to the collection of log handlers.
@@ -107,7 +109,7 @@ public sealed class LoggerBuilder
 	public LoggerBuilder SetQueueCapacity(int queueCapacity)
 	{
 		if (queueCapacity < 1)
-			throw new ArgumentException("'queueCapacity' must be greater than 0");
+			throw new ArgumentException("Queue capacity must be greater than 0.", nameof(queueCapacity));
 
 		_queueCapacity = queueCapacity;
 		return this;
