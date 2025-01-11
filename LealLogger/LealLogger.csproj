@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<PackageId>LealLogger</PackageId>
-	<Version>1.0.0</Version>
+	<Version>1.0.1</Version>
 	<Authors>Swellshinider</Authors>
 	<PackageTags>logging, logger, .NET</PackageTags>
 	<Description>LealLogger is a high-performance, extensible, and lightweight logging library for .NET applications.</Description>
