@@ -7,9 +7,17 @@
 	<PackageId>LealLogger</PackageId>
 	<Version>1.0.1</Version>
 	<Authors>Swellshinider</Authors>
+	<PackageIcon>LealLogger_icon.png</PackageIcon>
 	<PackageTags>logging, logger, .NET</PackageTags>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<Description>LealLogger is a high-performance, extensible, and lightweight logging library for .NET applications.</Description>
 	<RepositoryUrl>https://github.com/Swellshinider/LealLogger</RepositoryUrl>
   </PropertyGroup>
 
+	<ItemGroup>
+		<None Include="..\LICENSE" Pack="true" PackagePath=""/>
+		<None Include="..\README.md" Pack="true" PackagePath=""/>
+		<None Include="..\LealLogger_icon.png" Pack="true" PackagePath=""/>
+	</ItemGroup>
 </Project>
