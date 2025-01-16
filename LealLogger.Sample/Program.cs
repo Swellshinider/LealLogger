@@ -5,7 +5,7 @@ using LealLogger.Sample;
 // Building a logger
 var logger = new LoggerBuilder()
 	.AddConsoleHandler()                                            // Add a logger to log to the console
-	.AddFileHandler("errors.log", LogLevel.ERROR)              		// Add a logger to log to a file only errors and above
+	.AddFileHandler("errors.log", LogLevel.DEBUG)              		// Add a logger to log to a file only errors and above
 	.AddHandler(new DatabaseLogHandler("database.sqlite3"))    		// Your Custom handler example
 	.SetMinimumLogLevel(LogLevel.DEBUG)                             // Log everything from DEBUG and above
 	.SetQueueCapacity(5000)                                         // Large queue capacity for high throughput
