@@ -12,9 +12,11 @@ public sealed class FileLogHandler : LogHandler
 {
 	private readonly string _filePath;
 	private readonly Lock _lock = new();
+	private readonly int _lineLength = 75;
+	private readonly Guid _guid = Guid.NewGuid();
 	private StreamWriter? _writer;
 	private bool _firstLog = true;
-	
+
 	internal FileLogHandler(string filePath, LogLevel logLevel) : base(logLevel)
 	{
 		_filePath = filePath;
@@ -37,20 +39,26 @@ public sealed class FileLogHandler : LogHandler
 		{
 			if (_firstLog)
 			{
-				_writer.WriteLine($"===============================================================");
-				_writer.WriteLine($"├─── Date: {DateTime.Now:dd-MM-yyyy}");
-				_writer.WriteLine($"├─── ApplicationName: {logEntry.ApplicationName}");
-				_writer.WriteLine($"├─── UserName       : {logEntry.UserName}");
-				_writer.WriteLine($"├─── MachineName    : {logEntry.MachineName}");
-				_writer.WriteLine($"├─── ProcessId      : {logEntry.ProcessId}");
-				_writer.WriteLine($"└─── ThreadId       : {logEntry.ThreadId}\n");
+				_writer.WriteLine("╔" + new string('═', _lineLength - 2) + "╗");
+				_writer.WriteLine(DrawBoxLine($"Log GUID       : {_guid}"));
+				_writer.WriteLine(DrawBoxLine($"ApplicationName: {logEntry.ApplicationName}"));
+				_writer.WriteLine(DrawBoxLine($"UserName       : {logEntry.UserName}"));
+				_writer.WriteLine(DrawBoxLine($"MachineName    : {logEntry.MachineName}"));
+				_writer.WriteLine("╚" + new string('═', _lineLength - 2) + "╝");
+				_firstLog = false;
 			}
-			
+
 			_writer.WriteLine($"[({logEntry.Timestamp:dd-MM-yyyy HH:mm:ss.ffff}) {logEntry.LogLevel}]: {logEntry.Message}");
-			
+
 			if (logEntry.Exception != null)
 				_writer.WriteLine(FormatException(logEntry.Exception));
 		}
+	}
+
+	private string DrawBoxLine(string text = "")
+	{
+		var padding = _lineLength - text.Length - 6;
+		return $"║    {text}{new string(' ', padding)}║";
 	}
 
 	/// <inheritdoc />
@@ -58,6 +66,13 @@ public sealed class FileLogHandler : LogHandler
 	{
 		lock (_lock)
 		{
+			if (_writer != null)
+			{
+				_writer.WriteLine("╔" + new string('═', _lineLength - 2) + "╗");
+				_writer.WriteLine(DrawBoxLine($"End GUID       : {_guid}"));
+				_writer.WriteLine("╚" + new string('═', _lineLength - 2) + "╝");
+			}
+
 			_writer?.Dispose();
 			_writer = null;
 		}
