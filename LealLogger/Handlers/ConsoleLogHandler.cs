@@ -1,9 +1,16 @@
 namespace LealLogger.Handlers;
 
+/// <summary>
+/// A log handler that writes log entries to the console.
+/// </summary>
 public class ConsoleLogHandler : LogHandler
 {
 	internal ConsoleLogHandler(LogLevel logLevel) : base(logLevel) { }
 
+	/// <summary>
+	/// Handles a log entry by writing it to the console.
+	/// </summary>
+	/// <param name="logEntry"> The log entry to handle. </param>
 	public override void HandleLog(Log logEntry)
 	{
 		if (logEntry.LogLevel < MinimumLogLevel)
@@ -29,6 +36,9 @@ public class ConsoleLogHandler : LogHandler
 		_ => ConsoleColor.White
 	};
 
+	/// <summary>
+	/// Disposes of the log handler.
+	/// </summary>
 	public override void Dispose()
 	{
 		GC.SuppressFinalize(this);

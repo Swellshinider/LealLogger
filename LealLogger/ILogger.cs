@@ -1,5 +1,8 @@
 namespace LealLogger;
 
+/// <summary>
+///	Defines a logger that can log messages at different levels.
+/// </summary>
 public interface ILogger
 {
 	/// <summary>

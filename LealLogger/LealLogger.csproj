@@ -5,11 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<PackageId>LealLogger</PackageId>
-	<Version>1.0.1</Version>
+	<Version>1.0.2</Version>
 	<Authors>Swellshinider</Authors>
 	<PackageIcon>LealLogger_icon.png</PackageIcon>
 	<PackageTags>logging, logger, .NET</PackageTags>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<Description>LealLogger is a high-performance, extensible, and lightweight logging library for .NET applications.</Description>
 	<RepositoryUrl>https://github.com/Swellshinider/LealLogger</RepositoryUrl>

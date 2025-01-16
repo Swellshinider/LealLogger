@@ -31,21 +31,28 @@ public class Logger : BaseLogger
 	}
 
 	#region [ Public Methods ]
+	/// <inheritdoc/>
 	public override void Debug(string message, Exception? ex = null) => EnqueueLog(LogLevel.DEBUG, message, ex);
+	
+	/// <inheritdoc/>
 	public override void Info(string message, Exception? ex = null) => EnqueueLog(LogLevel.INFO, message, ex);
+	
+	/// <inheritdoc/>
 	public override void Warn(string message, Exception? ex = null) => EnqueueLog(LogLevel.WARN, message, ex);
+	
+	/// <inheritdoc/>
 	public override void Error(string message, Exception? ex = null) => EnqueueLog(LogLevel.ERROR, message, ex);
+	
+	/// <inheritdoc/>
 	public override void Fatal(string message, Exception? ex = null) => EnqueueLog(LogLevel.FATAL, message, ex);
-	#endregion
 
-	#region [ Private Methods ]
 	/// <summary>
 	/// Adds a log entry to the processing queue if its level meets the minimum log level.
 	/// </summary>
 	/// <param name="level">The severity level of the log.</param>
 	/// <param name="message">The message to log.</param>
 	/// <param name="ex">An optional exception to include with the log.</param>
-	private void EnqueueLog(LogLevel level, string message, Exception? ex)
+	public void EnqueueLog(LogLevel level, string message, Exception? ex)
 	{
 		if (level < _minLogLevel)
 			return;
@@ -59,7 +66,9 @@ public class Logger : BaseLogger
 		}
 		catch (InvalidOperationException) { } // Thrown if the collection has been marked as completed for adding.
 	}
+	#endregion
 	
+	#region [ Private Methods ]
 	/// <summary>
 	/// Processes log entries from the queue and sends them to the configured handlers.
 	/// </summary>
@@ -92,6 +101,7 @@ public class Logger : BaseLogger
 	#endregion
 
 	#region [ Dispose ]
+	/// <inheritdoc/>
 	public override void Dispose()
 	{
 		if (_disposed)
