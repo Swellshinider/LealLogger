@@ -1,4 +1,10 @@
+<div align="center">
+
 # LealLogger
+
+[![NuGet](https://img.shields.io/nuget/v/LealLogger.svg)](https://www.nuget.org/packages/LealLogger/)
+
+</div>
 
 **LealLogger** is a high-performance, extensible, and lightweight logging library for .NET applications. It supports multiple logging outputs (e.g., Console, File) and provides flexibility through a powerful builder pattern. Whether you're developing a small project or a high-load enterprise application, LealLogger adapts to your needs with ease.
 
