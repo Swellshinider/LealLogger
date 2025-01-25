@@ -6,7 +6,8 @@
     <Nullable>enable</Nullable>
 	<PackageId>LealLogger</PackageId>
 	<Version>1.0.2</Version>
-	<Authors>Swellshinider</Authors>
+        <Authors>Eduardo Ribeiro Leal</Authors>
+        <Company>Swellshinider</Company>
 	<PackageIcon>icon.png</PackageIcon>
 	<PackageTags>logging, logger, .NET</PackageTags>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
