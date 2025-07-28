@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using LealLogger.Enums;
 using LealLogger.Handlers;
 
 namespace LealLogger.Factory;
@@ -59,16 +60,18 @@ public sealed class LoggerBuilder
 	public LoggerBuilder AddConsoleHandler(LogLevel logLevel = LogLevel.DEBUG)
 		=> AddHandler(new ConsoleLogHandler(logLevel));
 
-	/// <summary>
-	/// Adds a <see cref="FileLogHandler"/> to the collection of log handlers.
-	/// </summary>
-	/// <param name="filePath">The path to the file where logs will be written.</param>
-	/// <param name="logLevel">The minimum log level for this log handler. Defaults to DEBUG</param>
-	/// <returns>
-	/// This <see cref="LoggerBuilder"/> instance for method chaining.
-	/// </returns>
-	public LoggerBuilder AddFileHandler(string filePath, LogLevel logLevel = LogLevel.DEBUG)
-		=> AddHandler(new FileLogHandler(filePath, logLevel));
+    /// <summary>
+    /// Adds a <see cref="FileLogHandler"/> to the collection of log handlers.
+    /// </summary>
+    /// <param name="filePath">The path to the file where logs will be written.</param>
+    /// <param name="timeSpanPattern">The time span patter that will be appended into the filename.</param>
+    /// <param name="fileRolling">Defines the strategies used to roll log files.</param>
+    /// <param name="logLevel">The minimum log level for this log handler. Defaults to DEBUG</param>
+    /// <returns>
+    /// This <see cref="LoggerBuilder"/> instance for method chaining.
+    /// </returns>
+    public LoggerBuilder AddFileHandler(string filePath, string timeSpanPattern, FileRolling fileRolling, LogLevel logLevel = LogLevel.DEBUG)
+		=> AddHandler(new FileLogHandler(filePath, logLevel, timeSpanPattern, fileRolling));
 
 	/// <summary>
 	/// Adds a custom <see cref="LogHandler"/> to the collection of log handlers.
