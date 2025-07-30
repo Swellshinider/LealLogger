@@ -31,7 +31,7 @@ public class LoggerBuilderTests
 		var builder = new LoggerBuilder();
 
 		// Act
-		var customLogger = builder.Build<MyCustomLogger>();
+		using var customLogger = builder.Build<MyCustomLogger>();
 
 		// Assert
 		Assert.NotNull(customLogger);
@@ -46,28 +46,31 @@ public class LoggerBuilderTests
 
 		// Act
 		builder.AddConsoleHandler();
-		var logger = builder.Build();
+        using var logger = builder.Build();
 
 		// Assert
 		Assert.NotNull(logger);
 		Assert.Contains(builder.Handlers, h => h is ConsoleLogHandler);
-	}
+    }
 
 	[Fact]
 	public void AddFileHandler_ShouldIncludeFileHandler()
 	{
 		// Arrange
-		var filePath = Path.GetTempFileName();
-		var builder = new LoggerBuilder();
+		var fileDirectory = Path.GetTempPath();
+		var filePath = Path.Combine(fileDirectory, "test_log.txt");
+        var builder = new LoggerBuilder();
 
 		// Act
-		builder.AddFileHandler(filePath);
-		var logger = builder.Build();
+		builder.AddFileHandler(filePath, out var finalFilePath);
+        using var logger = builder.Build();
 
 		// Assert
 		Assert.NotNull(logger);
 		Assert.Contains(builder.Handlers, h => h is FileLogHandler);
-	}
+		Assert.NotEqual(filePath, finalFilePath);
+		Assert.True(File.Exists(finalFilePath));
+    }
 
 	[Fact]
 	public void SetQueueCapacity_InvalidValue_ShouldThrow()
@@ -91,7 +94,7 @@ public class LoggerBuilderTests
 
 		// Act
 		builder.SetMinimumLogLevel(level);
-		var logger = builder.Build();
+		using var logger = builder.Build();
 
 		// Assert
 		Assert.NotNull(logger);

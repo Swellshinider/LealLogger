@@ -96,4 +96,47 @@ public class LoggerTests
 		// Assert
 		Assert.Equal(2, inMemoryHandler.Logs.Count);
 	}
+
+	[Fact]
+	public void LoggingWithException_ShouldStoreExceptionDetails()
+	{
+		// Arrange
+		var inMemoryHandler = new InMemoryLogHandler();
+		var logger = new LoggerBuilder()
+			.SetMinimumLogLevel(LogLevel.ERROR)
+			.SetQueueCapacity(1000)
+			.AddHandler(inMemoryHandler)
+			.Build();
+
+		var exception = new InvalidOperationException("Test exception");
+		// Act
+		logger.Error("An error occurred", exception);
+		logger.Dispose();
+
+		Assert.Single(inMemoryHandler.Logs);
+		var logEntry = inMemoryHandler.Logs.First();
+		Assert.Equal("An error occurred", logEntry.Message);
+		Assert.Equal(exception, logEntry.Exception);
+    }
+
+	[Fact]
+	public async Task LoggingMultipleThreads_ShouldHandleConcurrency()
+	{
+		// Arrange
+		var inMemoryHandler = new InMemoryLogHandler();
+		var logger = new LoggerBuilder()
+			.SetMinimumLogLevel(LogLevel.DEBUG)
+			.SetQueueCapacity(1000)
+			.AddHandler(inMemoryHandler)
+			.Build();
+
+		// Act
+		var tasks = Enumerable.Range(0, 100).Select(i => Task.Run(() => logger.Info($"Log from task {i}"))).ToArray();
+		await Task.WhenAll(tasks);
+
+        logger.Dispose();
+		// Assert
+		Assert.Equal(100, inMemoryHandler.Logs.Count);
+		Assert.All(inMemoryHandler.Logs, log => Assert.StartsWith("Log from task", log.Message));
+    }
 }
