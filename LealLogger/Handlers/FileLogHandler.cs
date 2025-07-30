@@ -20,9 +20,8 @@ public sealed class FileLogHandler : LogHandler
     private readonly string _pattern;
 
     private StreamWriter? _writer;
-    private bool _firstLog = true;
 
-    internal FileLogHandler(string filePath, LogLevel logLevel, string pattern, FileRolling fileRolling) : base(logLevel)
+    internal FileLogHandler(string filePath, LogLevel logLevel, string pattern, FileRolling fileRolling, out string finalFilePath) : base(logLevel)
     {
         _filePath = filePath;
         _pattern = pattern;
@@ -31,16 +30,75 @@ public sealed class FileLogHandler : LogHandler
         if (string.IsNullOrWhiteSpace(_filePath))
             throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
 
-        if (!File.Exists(filePath))
+        finalFilePath = CreateFile();
+
+        if (_writer == null)
+            throw new InvalidOperationException("Failed to create a StreamWriter for the log file.");
+
+        _writer.WriteLine($"::.{_guid}.::");
+        _writer.WriteLine($"Date & Time: {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
+        _writer.WriteLine($"Application: {AppDomain.CurrentDomain.FriendlyName}");
+        _writer.WriteLine($"UserName   : {Environment.UserName}");
+        _writer.WriteLine($"MachineName: {Environment.MachineName}\n");
+    }
+
+    private string CreateFile()
+    {
+        var fileDirectoryInfo = Directory.CreateDirectory(_filePath);
+        var directory = fileDirectoryInfo.Parent ?? throw new DirectoryNotFoundException($"The directory for the file path '{_filePath}' does not exist.");
+        var fileExtension = Path.GetExtension(_filePath);
+        var files = directory.GetFiles().Where(p => p.Extension == fileExtension).ToList();
+        var hasAnyFiles = files.Count != 0;
+
+        FileInfo? recentFile = null;
+
+        if (hasAnyFiles)
         {
-            _ = Directory.CreateDirectory(_filePath);
-            File.Create(_filePath).Dispose();
+            recentFile = directory
+                .GetFiles($"{Path.GetFileNameWithoutExtension(_filePath)}_*{fileExtension}")
+                .OrderByDescending(f => f.LastWriteTime)
+                .FirstOrDefault();
         }
 
-        _writer = new StreamWriter(File.Open(_filePath, FileMode.Append, FileAccess.Write, FileShare.Read))
+        var fileName = Path.GetFileNameWithoutExtension(_filePath);
+        var timestamp = DateTime.Now.ToString(_pattern);
+
+        // Create the first file
+        if (!hasAnyFiles || recentFile == null)
         {
-            AutoFlush = true
+            var newFilePath = Path.Combine(directory.FullName, $"{fileName}_{timestamp}{fileExtension}");
+            File.Create(newFilePath).Dispose();
+            _writer = new StreamWriter(newFilePath, false) { AutoFlush = true };
+            return newFilePath;
+        }
+
+        var createdNew = _fileRolling switch
+        {
+            FileRolling.Infinite => false,
+            FileRolling.ByExecution => true,
+            FileRolling.Hourly => DateTime.Now.Subtract(recentFile.LastWriteTime).TotalHours >= 1,
+            FileRolling.EachTwoHours => DateTime.Now.Subtract(recentFile.LastWriteTime).TotalHours >= 2,
+            FileRolling.EachThreeHours => DateTime.Now.Subtract(recentFile.LastWriteTime).TotalHours >= 3,
+            FileRolling.EachFourHours => DateTime.Now.Subtract(recentFile.LastWriteTime).TotalHours >= 4,
+            FileRolling.EachSixHours => DateTime.Now.Subtract(recentFile.LastWriteTime).TotalHours >= 6,
+            FileRolling.EachTwelveHours => DateTime.Now.Subtract(recentFile.LastWriteTime).TotalHours >= 12,
+            FileRolling.Daily => DateTime.Now.Date > recentFile.LastWriteTime.Date,
+            FileRolling.Weekly => DateTime.Now.Date > recentFile.LastWriteTime.Date.AddDays(-(int)DateTime.Now.DayOfWeek),
+            FileRolling.Monthly => DateTime.Now.Year != recentFile.LastWriteTime.Year || DateTime.Now.Month != recentFile.LastWriteTime.Month,
+            FileRolling.Yearly => DateTime.Now.Year != recentFile.LastWriteTime.Year,
+            _ => throw new NotSupportedException($"File rolling strategy '{_fileRolling}' is not supported."),
         };
+
+        var finalFilePath = createdNew
+            ? Path.Combine(fileDirectoryInfo.FullName, $"{fileName}_{timestamp}{fileExtension}")
+            : recentFile.FullName;
+
+        _writer = new StreamWriter(finalFilePath!, !createdNew) { AutoFlush = true };
+        return finalFilePath;
+    }
+
+    private void LogHeader()
+    {
     }
 
     /// <summary>
@@ -54,17 +112,6 @@ public sealed class FileLogHandler : LogHandler
 
         lock (_lock)
         {
-            if (_firstLog)
-            {
-                _writer.WriteLine("╔" + new string('═', _lineLength - 2) + "╗");
-                _writer.WriteLine(DrawBoxLine($"Log GUID       : {_guid}"));
-                _writer.WriteLine(DrawBoxLine($"ApplicationName: {logEntry.ApplicationName}"));
-                _writer.WriteLine(DrawBoxLine($"UserName       : {logEntry.UserName}"));
-                _writer.WriteLine(DrawBoxLine($"MachineName    : {logEntry.MachineName}"));
-                _writer.WriteLine("╚" + new string('═', _lineLength - 2) + "╝");
-                _firstLog = false;
-            }
-
             _writer.WriteLine($"[({logEntry.Timestamp:dd-MM-yyyy HH:mm:ss.ffff}) {logEntry.LogLevel}]: {logEntry.Message}");
 
             if (logEntry.Exception != null)
@@ -72,24 +119,12 @@ public sealed class FileLogHandler : LogHandler
         }
     }
 
-    private string DrawBoxLine(string text = "")
-    {
-        var padding = _lineLength - text.Length - 6;
-        return $"║    {text}{new string(' ', padding)}║";
-    }
-
     /// <inheritdoc />
     public override void Dispose()
     {
         lock (_lock)
         {
-            if (_writer != null)
-            {
-                _writer.WriteLine("╔" + new string('═', _lineLength - 2) + "╗");
-                _writer.WriteLine(DrawBoxLine($"End GUID       : {_guid}"));
-                _writer.WriteLine("╚" + new string('═', _lineLength - 2) + "╝");
-            }
-
+            _writer?.WriteLine(new string('═', _lineLength));
             _writer?.Dispose();
             _writer = null;
         }

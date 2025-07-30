@@ -11,9 +11,39 @@ public enum FileRolling
     Infinite,
 
     /// <summary>
+    /// File is rolled every time the application is executed.
+    /// </summary>
+    ByExecution,
+
+    /// <summary>
     /// Creates a new log file every hour.
     /// </summary>
     Hourly,
+
+    /// <summary>
+    /// Creates a new log file every two hours.
+    /// </summary>
+    EachTwoHours,
+
+    /// <summary>
+    /// Creates a new log file every three hours.
+    /// </summary>
+    EachThreeHours,
+
+    /// <summary>
+    /// Creates a new log file every four hours.
+    /// </summary>
+    EachFourHours,
+
+    /// <summary>
+    /// Creates a new log file every six hours.
+    /// </summary>
+    EachSixHours,
+
+    /// <summary>
+    /// Creates a new log file every twelve hours.
+    /// </summary>
+    EachTwelveHours,
 
     /// <summary>
     /// Creates a new log file every day.
@@ -31,27 +61,7 @@ public enum FileRolling
     Monthly,
 
     /// <summary>
-    /// Rolls over to a new log file when the current one exceeds a configured size in kilobytes.
+    /// Creates a new log file every year.
     /// </summary>
-    SizeKB,
-
-    /// <summary>
-    /// Rolls over to a new log file when the current one exceeds a configured size in megabytes.
-    /// </summary>
-    SizeMB,
-
-    /// <summary>
-    /// Rolls over to a new log file when the current one exceeds a configured size in gigabytes.
-    /// </summary>
-    SizeGB,
-
-    /// <summary>
-    /// Creates a new log file each time the application starts.
-    /// </summary>
-    Startup,
-
-    /// <summary>
-    /// Rolls logs based on a user-defined time interval.
-    /// </summary>
-    CustomTimeSpan,
+    Yearly,
 }

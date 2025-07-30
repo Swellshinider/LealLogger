@@ -15,24 +15,20 @@ public sealed class LoggerBuilder
 	private int _queueCapacity;
 	private LogLevel _logLevel;
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="LoggerBuilder"/> class 
-	/// with default settings. By default:
-	/// <list type="bullet">
-	///   <item><description><c>_queueCapacity</c> is <c>1000</c>.</description></item>
-	///   <item><description><c>_logLevel</c> is <see cref="LogLevel.DEBUG"/> in Debug build or <see cref="LogLevel.INFO"/> in Release build.</description></item>
-	///   <item><description><c>_handlers</c> starts empty.</description></item>
-	/// </list>
-	/// </summary>
-	public LoggerBuilder()
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoggerBuilder"/> class 
+    /// with default settings. By default:
+    /// <list type="number">
+    ///   <item><description><c>QueueCapacity</c> is <c>1000</c>.</description></item>
+    ///   <item><description><c>MinimumLogLevel</c> is <see cref="LogLevel.DEBUG"></see>.</description></item>
+    ///   <item><description><c>Handlers</c> starts empty.</description></item>
+    /// </list>
+    /// </summary>
+    public LoggerBuilder()
 	{
 		_handlers = [];
 		_queueCapacity = 1_000;
-#if DEBUG
 		_logLevel = LogLevel.DEBUG;
-#else
-		_logLevel = LogLevel.INFO;
-#endif
 	}
 	
 	/// <summary>
@@ -64,14 +60,15 @@ public sealed class LoggerBuilder
     /// Adds a <see cref="FileLogHandler"/> to the collection of log handlers.
     /// </summary>
     /// <param name="filePath">The path to the file where logs will be written.</param>
-    /// <param name="timeSpanPattern">The time span patter that will be appended into the filename.</param>
-    /// <param name="fileRolling">Defines the strategies used to roll log files.</param>
+    /// <param name="finalFilePath">The path to the file where logs will be written in it's final version.</param>
+    /// <param name="timeSpanPattern">The time span patter that will be appended into the filename. Defaults to "dd-MM-yyyy-HHmm"</param>
+    /// <param name="fileRolling">Defines the strategies used to roll log files. Defaults to Daily</param>
     /// <param name="logLevel">The minimum log level for this log handler. Defaults to DEBUG</param>
     /// <returns>
     /// This <see cref="LoggerBuilder"/> instance for method chaining.
     /// </returns>
-    public LoggerBuilder AddFileHandler(string filePath, string timeSpanPattern, FileRolling fileRolling, LogLevel logLevel = LogLevel.DEBUG)
-		=> AddHandler(new FileLogHandler(filePath, logLevel, timeSpanPattern, fileRolling));
+    public LoggerBuilder AddFileHandler(string filePath, out string finalFilePath, string timeSpanPattern = "dd-MM-yyyy-HHmm", FileRolling fileRolling = FileRolling.Daily, LogLevel logLevel = LogLevel.DEBUG)
+		=> AddHandler(new FileLogHandler(filePath, logLevel, timeSpanPattern, fileRolling, out finalFilePath));
 
 	/// <summary>
 	/// Adds a custom <see cref="LogHandler"/> to the collection of log handlers.
