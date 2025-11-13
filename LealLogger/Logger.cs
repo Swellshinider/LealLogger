@@ -20,7 +20,7 @@ public class Logger : BaseLogger
 	/// <param name="minLogLevel">The minimum <see cref="LogLevel"/> required for logs to be processed.</param>
 	/// <param name="queueCapacity">The maximum number of log entries that can be queued. Default is 10,000.</param>
 	/// <param name="handlers">An array of <see cref="ILogHandler"/> instances responsible for handling logs.</param>
-	internal Logger(LogLevel minLogLevel, int queueCapacity, params ImmutableArray<LogHandler> handlers)
+	internal Logger(LogLevel minLogLevel, int queueCapacity, ImmutableArray<LogHandler> handlers)
 		: base(minLogLevel, queueCapacity, handlers)
 	{
 		_cts = new CancellationTokenSource();
