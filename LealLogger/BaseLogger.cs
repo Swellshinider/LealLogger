@@ -29,7 +29,7 @@ public abstract class BaseLogger : ILogger, IDisposable
 	/// <param name="minLogLevel"> Minimum log level to be logged. </param>
 	/// <param name="queueCapacity"> Maximum number of log entries that can be queued. </param>
 	/// <param name="handlers"> Handlers to be used to log the messages. </param>
-	public BaseLogger(LogLevel minLogLevel, int queueCapacity = 10_000, params ImmutableArray<LogHandler> handlers) 
+	public BaseLogger(LogLevel minLogLevel, int queueCapacity = 10_000, ImmutableArray<LogHandler> handlers = default) 
 	{
 		_minLogLevel = minLogLevel;
 		_queueCapacity = queueCapacity;
